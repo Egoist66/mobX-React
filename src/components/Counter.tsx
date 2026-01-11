@@ -24,7 +24,7 @@ export const Counter: FC = observer(() => {
   
 
   const [savedCount, setSavedCount] = useState<number | null>(null)
-   const {count, increment, decrement} = counterStore
+   const {count, total, increment, decrement} = counterStore
 
   const handleReset = (): void => {
     
@@ -120,6 +120,9 @@ export const Counter: FC = observer(() => {
           </Flex>
          {savedCount !== 0 && <Paragraph>Сохраненное число: {savedCount}</Paragraph>}
         </Space>
+        <Paragraph type="warning">
+            Вычисленное: {total}
+        </Paragraph>
       </Card>
     </div>
   );
