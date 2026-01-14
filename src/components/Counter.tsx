@@ -14,27 +14,24 @@ import {
   ReloadOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
-import { useState, type FC } from "react";
-import {counterStore } from "../store/counter.store";
-import {observer} from 'mobx-react-lite'
+import { counterStore } from "../store/counter.store";
+import { observer } from "mobx-react-lite";
+import type { FC } from "react";
 
 const { Title, Paragraph } = Typography;
 
 export const Counter: FC = observer(() => {
-  
-
-  const [savedCount, setSavedCount] = useState<number | null>(null)
-   const {count, total, increment, decrement} = counterStore
-
-  const handleReset = (): void => {
-    
-    localStorage.removeItem("count");
-  };
-
-  const handleSave = (): void => {
-    setSavedCount(count)
-    localStorage.setItem("count", count.toString());
-  };
+  const {
+    count,
+    total,
+    savedCount,
+    newNumber,
+    increment,
+    decrement,
+    saveCount,
+    resetCount,
+    increaseNewNumber,
+  } = counterStore;
 
   return (
     <div
@@ -48,7 +45,7 @@ export const Counter: FC = observer(() => {
     >
       <Card
         style={{
-          width: 400,
+          width: 'min-content',
           textAlign: "center",
           borderRadius: 16,
           boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -88,7 +85,7 @@ export const Counter: FC = observer(() => {
               <Button
                 size="large"
                 icon={<ReloadOutlined />}
-                onClick={handleReset}
+                onClick={resetCount}
                 block
               >
                 Сброс
@@ -99,7 +96,7 @@ export const Counter: FC = observer(() => {
                 type="primary"
                 size="large"
                 icon={<PlusOutlined />}
-                onClick={() => increment(1)}
+                onClick={!newNumber ? () => increment(1): () => increment(newNumber)}
                 block
               >
                 Плюс
@@ -107,22 +104,34 @@ export const Counter: FC = observer(() => {
             </Col>
           </Row>
 
-          <Flex>
+          <Flex gap={10}>
             <Button
               type="dashed"
               size="large"
               icon={<SaveOutlined />}
-              onClick={handleSave}
+              onClick={saveCount}
               block
             >
               Сохранить состояние
             </Button>
+            <Button
+              type="default"
+              size="large"
+              icon={<SaveOutlined />}
+              onClick={() => increaseNewNumber(2)}
+              block
+            >
+              Добавить число
+            </Button>
           </Flex>
-         {savedCount !== 0 && <Paragraph>Сохраненное число: {savedCount}</Paragraph>}
+          {savedCount !== 0 && (
+            <Paragraph>Сохраненное число: {savedCount}</Paragraph>
+          )}
+
         </Space>
-        <Paragraph type="warning">
-            Вычисленное: {total}
-        </Paragraph>
+        <Paragraph type="warning">Вычисленное: {total}</Paragraph>
+        <Paragraph type="success">Добавленное число: {newNumber}</Paragraph>
+
       </Card>
     </div>
   );
